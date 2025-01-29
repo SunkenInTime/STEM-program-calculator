@@ -1,0 +1,22 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Dart Debug",
+            "program": "bin/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "console": "terminal",
+            "args": [],
+            "vmAdditionalArgs": [],
+            "toolArgs": []
+        },
+        {
+            "name": "Dart Profile",
+            "program": "bin/main.dart",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode": "profile"
+        }
+    ]
+}
