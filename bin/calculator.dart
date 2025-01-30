@@ -15,7 +15,9 @@ class Calculator {
     String result = "";
     String cleanString = input.replaceAll(" ", "");
 
-    final (Operators, int) currentOperator = validateInput(cleanString);
+    final (Operators, int)? currentOperator = _validateInput(cleanString);
+
+    if (currentOperator == null) return "";
 
     final (int, int) nums = (
       int.parse(cleanString.substring(0, currentOperator.$2)),
@@ -37,28 +39,31 @@ class Calculator {
     return result;
   }
 
-  (Operators, int) validateInput(String input) {
+  (Operators, int)? _validateInput(String input) {
     Operators? currentOperator;
     List<String> inputList = input.split("");
     int operatorIndex = 0;
+    try {
+      for (final (index, let) in inputList.indexed) {
+        if (operatorValues.containsKey(let)) {
+          if (currentOperator == null) {
+            currentOperator = operatorValues[let];
+            operatorIndex = index;
+          } else
+            throw ExcessiveFormatException();
 
-    for (final (index, let) in inputList.indexed) {
-      if (operatorValues.containsKey(let)) {
-        if (currentOperator == null) {
-          currentOperator = operatorValues[let];
-          operatorIndex = index;
-        } else
-          throw ExcessiveFormatException();
-
-        if (index == 0 || (index + 1) >= inputList.length)
-          throw EdgeOperatorException();
-      } else if (int.tryParse(let) == null) {
-        throw NonIntCharacterException();
+          if (index == 0 || (index + 1) >= inputList.length)
+            throw EdgeOperatorException();
+        } else if (int.tryParse(let) == null) {
+          throw NonIntCharacterException();
+        }
       }
+
+      if (currentOperator == null) throw UnidentifiableOperatorException();
+      return (currentOperator, operatorIndex);
+    } catch (e) {
+      print(e.toString());
     }
-
-    if (currentOperator == null) throw UnidentifiableOperatorException();
-
-    return (currentOperator, operatorIndex);
+    return null;
   }
 }
